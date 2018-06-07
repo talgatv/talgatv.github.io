@@ -1,0 +1,6 @@
+languageCode = "ru-ru"
+baseurl = "http://replace-this-with-your-hugo-site.com/"
+title = "My New Hugo Site"
+theme = "vex-hugo"
+newContentEditor = "nano"
+pygmentsStyle = "native"
