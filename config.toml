@@ -1,6 +1,6 @@
 languageCode = "ru-ru"
-baseurl = "http://replace-this-with-your-hugo-site.com/"
+baseurl = "https://talgatv.github.io/public/"
 title = "My New Hugo Site"
-theme = "vex-hugo"
+theme = "hugo-fresh"
 newContentEditor = "nano"
 pygmentsStyle = "native"
