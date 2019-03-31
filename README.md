@@ -1,5 +1,6 @@
 # talgatv.github.io
 GO
+hashCode 13 мая 2018
 # Mass media
 http://cityopen.ru/?p=70281
 http://cityopen.ru/?p=55131
