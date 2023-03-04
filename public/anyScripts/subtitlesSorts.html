@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Subtitle Word Sorter</title>
+  </head>
+  <body>
+    <h1>Subtitle Word Sorter</h1>
+    <form>
+      <label for="subtitle-files">Select subtitle files:</label>
+      <input type="file" id="subtitle-files" name="subtitle-files" accept=".srt" multiple>
+      <button type="button" onclick="processSubtitles()">Process Subtitles</button>
+    </form>
+    <table id="word-table">
+      <thead>
+        <tr>
+          <th>Word</th>
+          <th>Translation (Russian)</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <button type="button" onclick="copyTable()">Copy Table</button>
+    <script>
+      function processSubtitles() {
+        const subtitleFiles = document.getElementById("subtitle-files").files;
+        const allWords = new Set();
+        for (let i = 0; i < subtitleFiles.length; i++) {
+          const fileReader = new FileReader();
+          fileReader.readAsText(subtitleFiles[i]);
+          fileReader.onload = function() {
+            const subtitleText = fileReader.result;
+            const words = subtitleText.match(/[a-zA-Z']+/g);
+            for (let j = 0; j < words.length; j++) {
+              allWords.add(words[j].toLowerCase().sort());
+            }
+            updateTable();
+          };
+        }
+        function updateTable() {
+          const wordTable = document.getElementById("word-table");
+          const wordTableBody = wordTable.getElementsByTagName("tbody")[0];
+          wordTableBody.innerHTML = "";
+          allWords.forEach(function(word) {
+            const row = wordTableBody.insertRow(-1);
+            const wordCell = row.insertCell(0);
+            wordCell.textContent = word;
+            const translationCell = row.insertCell(1);
+            translationCell.textContent = "Translating...";
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ru&dt=t&q=${word}`, true);
+            xhr.onreadystatechange = function() {
+              if (xhr.readyState === 4 && xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                translationCell.textContent = response[0][0][0];
+              }
+            };
+            xhr.send();
+          });
+        }
+      }
+      function copyTable() {
+        const wordTable = document.getElementById("word-table");
+        const range = document.createRange();
+        range.selectNodeContents(wordTable);
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        document.execCommand("copy");
+        alert("Table copied to clipboard.");
+      }
+    </script>
+  </body>
+</html>
